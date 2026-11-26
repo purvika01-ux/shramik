@@ -1,4 +1,5 @@
-import { HardHat, LogOut, Settings } from 'lucide-react'
+import { LogOut, Settings } from 'lucide-react'
+import { WorkerLogo } from './Illustrations'
 import { useAuth } from '../context/AuthContext'
 import { NAV_ITEMS } from './navItems'
 import { useLang } from '../i18n/LanguageContext'
@@ -9,14 +10,12 @@ export function Brand({ compact = false }) {
   const { t } = useLang()
   return (
     <div className={`flex min-w-0 items-center ${compact ? 'gap-2' : 'gap-3'}`}>
-      <div className={`grid shrink-0 place-items-center rounded-xl bg-green-600 text-white ${compact ? 'size-9 max-[350px]:hidden' : 'size-10'}`}>
-        <HardHat className="size-5" strokeWidth={2.25} />
-      </div>
+      <WorkerLogo className={`shrink-0 ${compact ? 'size-9 max-[350px]:hidden' : 'size-11'}`} />
       {compact ? (
-        <p className="line-clamp-2 min-w-0 text-[15px] font-bold leading-tight text-slate-900">{t('app.name')}</p>
+        <p className="line-clamp-2 min-w-0 text-[16px] font-extrabold leading-tight text-green-700">{t('app.name')}</p>
       ) : (
         <div className="min-w-0 leading-tight">
-          <p className="truncate text-base font-bold text-slate-900">{t('app.name')}</p>
+          <p className="truncate text-lg font-extrabold text-green-700">{t('app.name')}</p>
           <p className="truncate text-xs text-slate-500">{t('app.subtitle')}</p>
         </div>
       )}

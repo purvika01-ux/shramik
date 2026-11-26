@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import api, { TOKEN_KEY } from '../api/axios'
+import api, { clearToken, getToken, saveToken } from '../api/axios'
 
 const AuthContext = createContext(null)
 
@@ -9,29 +9,32 @@ const AuthContext = createContext(null)
  */
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [checking, setChecking] = useState(() => !!localStorage.getItem(TOKEN_KEY))
+  const [checking, setChecking] = useState(() => !!getToken())
 
   const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY)
+    clearToken()
     setUser(null)
   }, [])
 
-  const saveLogin = (res) => {
-    localStorage.setItem(TOKEN_KEY, res.data.token)
+  const saveLogin = (res, remember = true) => {
+    saveToken(res.data.token, remember)
     setUser(res.data.user)
     return res.data.user
   }
 
-  const login = useCallback(async (email, password) => saveLogin(await api.post('/auth/login', { email, password })), [])
-  const register = useCallback(async (name, email, password) => saveLogin(await api.post('/auth/register', { name, email, password })), [])
+  const login = useCallback(async (email, password, remember = true) => saveLogin(await api.post('/auth/login', { email, password }), remember), [])
+  const register = useCallback(
+    async (name, email, mobile, password) => saveLogin(await api.post('/auth/register', { name, email, mobile, password })),
+    [],
+  )
 
   // On page load: if a token is saved, ask the server who it belongs to
   useEffect(() => {
-    if (!localStorage.getItem(TOKEN_KEY)) return
+    if (!getToken()) return
     api
       .get('/auth/me')
       .then((res) => setUser(res.data.user))
-      .catch(() => localStorage.removeItem(TOKEN_KEY))
+      .catch(() => clearToken())
       .finally(() => setChecking(false))
   }, [])
 

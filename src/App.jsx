@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { DataProvider, FullPageLoader } from './context/DataContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import { LanguageProvider } from './i18n/LanguageContext'
+import { LanguageProvider, useLang } from './i18n/LanguageContext'
 import { ToastProvider } from './components/Toast'
 import { ConfirmProvider } from './components/ConfirmationDialog'
 import Sidebar from './components/Sidebar'
@@ -13,26 +13,33 @@ import Labour from './pages/Labour'
 import Attendance from './pages/Attendance'
 import HisabKitab from './pages/HisabKitab'
 import Reports from './pages/Reports'
-import AuthPage from './pages/AuthPage'
+import AuthPage, { ForgotPassword, ResetPassword } from './pages/AuthPage'
 import LandingPage from './pages/LandingPage'
 import AdminDashboard from './pages/AdminDashboard'
 import { useHashRoute } from './hooks/useHashRoute'
 
 const PAGES = { dashboard: Dashboard, labour: Labour, attendance: Attendance, hisab: HisabKitab, reports: Reports }
+// Name shown in the phone top bar
+const TITLES = { labour: 'dash.labourMgmt', attendance: 'nav.attendance', hisab: 'nav.hisab', reports: 'nav.reports' }
 
 function Shell() {
   const [route, navigate] = useHashRoute()
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const { t } = useLang()
   const Page = PAGES[route.page]
+  const openSettings = () => setSettingsOpen(true)
+  const isHome = route.page === 'dashboard'
+  // Back: from a labourer's page to the list, from a list to Home
+  const goBack = () => navigate(route.id ? `/${route.page}` : '/dashboard')
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar current={route.page} onNavigate={navigate} onOpenSettings={() => setSettingsOpen(true)} />
+      <Sidebar current={route.page} onNavigate={navigate} onOpenSettings={openSettings} />
       <div className="min-w-0 flex-1">
-        <Header onOpenSettings={() => setSettingsOpen(true)} />
-        <main className="mx-auto max-w-3xl px-4 pb-28 pt-5 md:px-8 md:pb-10 md:pt-8 lg:max-w-5xl print:max-w-none print:p-0">
+        {!isHome && <Header title={t(TITLES[route.page])} onBack={goBack} onOpenSettings={openSettings} />}
+        <main className={`mx-auto max-w-3xl px-4 pb-28 md:px-8 md:pb-10 md:pt-8 lg:max-w-5xl print:max-w-none print:p-0 ${isHome ? 'pt-0' : 'pt-4'}`}>
           {/* key gives each section / labourer a fresh page state */}
-          <Page key={`${route.page}/${route.id || ''}`} route={route} navigate={navigate} />
+          <Page key={`${route.page}/${route.id || ''}`} route={route} navigate={navigate} onOpenSettings={openSettings} />
         </main>
       </div>
       <BottomNavigation current={route.page} onNavigate={navigate} />
@@ -41,9 +48,14 @@ function Shell() {
   )
 }
 
-/** Pages for visitors who are not logged in: #/ (landing), #/login, #/register */
+const PUBLIC_PAGES = ['login', 'register', 'forgot-password', 'reset-password']
+
+/** Pages for visitors who are not logged in: #/ (landing), #/login, #/register, #/forgot-password, #/reset-password?token=… */
 function PublicPages() {
-  const read = () => (['#/login', '#/register'].includes(window.location.hash) ? window.location.hash.slice(2) : 'home')
+  const read = () => {
+    const path = window.location.hash.replace(/^#\/?/, '').split('?')[0]
+    return PUBLIC_PAGES.includes(path) ? path : 'home'
+  }
   const [page, setPage] = useState(read)
 
   useEffect(() => {
@@ -60,6 +72,11 @@ function PublicPages() {
   }
 
   if (page === 'home') return <LandingPage goTo={goTo} />
+  if (page === 'forgot-password') return <ForgotPassword goTo={goTo} />
+  if (page === 'reset-password') {
+    const token = new URLSearchParams(window.location.hash.split('?')[1] || '').get('token') || ''
+    return <ResetPassword token={token} goTo={goTo} />
+  }
   return <AuthPage key={page} mode={page} goTo={goTo} />
 }
 

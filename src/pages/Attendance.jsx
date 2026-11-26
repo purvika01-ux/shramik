@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ChevronLeft, ChevronRight, CheckCheck, Save, CheckCircle2, Users, UserPlus } from 'lucide-react'
+import { ChevronLeft, ChevronRight, CheckCheck, Save, CheckCircle2, Users, UserPlus, CalendarDays } from 'lucide-react'
 import AttendanceList from '../components/AttendanceList'
 import Modal from '../components/Modal'
 import { Badge, Button, Card, EmptyState, SearchBox } from '../components/ui'
@@ -132,9 +132,11 @@ export default function Attendance({ navigate }) {
           <button type="button" onClick={() => changeDate(addDays(date, -1))} className="grid size-12 shrink-0 place-items-center rounded-xl border border-slate-300 bg-white text-slate-700 active:bg-slate-100" aria-label={t('att.prevDay')}>
             <ChevronLeft className="size-6" />
           </button>
-          <label className="relative min-w-0 flex-1 text-center">
+          <label className="relative min-w-0 flex-1 rounded-xl border border-slate-200 px-2 py-1.5 text-center">
             <span className="block text-sm font-semibold text-slate-500">{isToday ? t('common.today') : dayName(date)}</span>
-            <span className="block text-2xl font-bold tracking-tight text-slate-900">{formatDate(date)}</span>
+            <span className="flex items-center justify-center gap-2 text-[22px] font-bold tracking-tight text-slate-900">
+              <CalendarDays className="size-5 shrink-0 text-green-600" /> {formatDate(date)}
+            </span>
             {/* Invisible native date picker over the date text */}
             <input type="date" value={date} max={today} onChange={(e) => changeDate(e.target.value)} className="absolute inset-0 cursor-pointer opacity-0" aria-label={t('att.selectDate')} />
           </label>
@@ -154,8 +156,8 @@ export default function Attendance({ navigate }) {
           <Count label={t('att.present')} value={stats.present} cls="bg-green-50 text-green-700" />
           <Count label={t('att.absent')} value={stats.absent} cls="bg-red-50 text-red-600" />
         </div>
-        <div className="mt-2 flex items-center justify-between rounded-xl bg-slate-900 px-4 py-3 text-white">
-          <span className="text-sm text-slate-300">{t('att.todayWages')}</span>
+        <div className="mt-2 flex items-center justify-between rounded-xl bg-green-50 px-4 py-3 text-green-900">
+          <span className="text-[15px] font-medium text-green-800">{t('att.todayWages')}</span>
           <span className="whitespace-nowrap text-lg font-bold">{formatINR(stats.wages)}</span>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -272,9 +274,9 @@ function CorrectionDialog({ open, count, date, onCancel, onSave }) {
 
 function Count({ label, value, cls }) {
   return (
-    <div className={`rounded-xl px-1 py-2.5 ${cls}`}>
-      <p className="text-xl font-bold">{value}</p>
-      <p className="truncate text-xs font-semibold">{label}</p>
+    <div className={`rounded-xl px-1 py-3 ${cls}`}>
+      <p className="text-2xl font-extrabold">{value}</p>
+      <p className="truncate text-[13px] font-semibold">{label}</p>
     </div>
   )
 }

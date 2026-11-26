@@ -55,7 +55,7 @@ function LabourList({ route, navigate }) {
               key={f}
               type="button"
               onClick={() => setFilter(f)}
-              className={`h-10 rounded-full px-4 text-sm font-semibold ${filter === f ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 ring-1 ring-slate-200'}`}
+              className={`h-11 rounded-full px-4 text-[15px] font-semibold ${filter === f ? 'bg-green-600 text-white' : 'bg-white text-slate-700 ring-1 ring-slate-200'}`}
             >
               {filterLabel[f]} ({count(f)})
             </button>
@@ -63,38 +63,38 @@ function LabourList({ route, navigate }) {
         </div>
       </div>
 
-      <Card>
+      <div>
         {data.labourers.length === 0 ? (
+          <Card>
           <EmptyState icon={Users} title={t('lab.none')} message={t('lab.noneMsg')} action={<Button icon={UserPlus} onClick={() => setFormOpen(true)}>{t('lab.add')}</Button>} />
+          </Card>
         ) : list.length === 0 ? (
-          <EmptyState icon={Users} title={t('common.noMatch')} message={t('common.noMatchMsg')} />
+          <Card><EmptyState icon={Users} title={t('common.noMatch')} message={t('common.noMatchMsg')} /></Card>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="space-y-2.5">
             {list.map((l) => (
               <li key={l.id}>
-                <button type="button" onClick={() => navigate(`/labour/${l.id}`)} className="flex w-full items-center gap-3 px-4 py-3.5 text-left hover:bg-slate-50 active:bg-slate-100">
-                  <Avatar name={l.name} />
+                <button
+                  type="button"
+                  onClick={() => navigate(`/labour/${l.id}`)}
+                  className="flex w-full items-center gap-3 rounded-2xl border border-slate-100 bg-white px-3.5 py-3.5 text-left shadow-sm shadow-slate-200/70 active:bg-slate-50"
+                >
+                  <Avatar name={l.name} className="size-12 text-base" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[16px] font-semibold text-slate-900">{l.name}</p>
-                    <p className="mt-0.5 flex flex-wrap gap-x-2 text-[13px] text-slate-500">
-                      <span className="whitespace-nowrap">{l.id}</span>
-                      <span className="whitespace-nowrap">{l.mobile || t('lab.noMobile')}</span>
+                    <p className="truncate text-[17px] font-bold text-slate-900">{l.name}</p>
+                    <p className="mt-0.5 truncate text-[14px] text-slate-600">{l.mobile ? `+91 ${l.mobile}` : t('lab.noMobile')}</p>
+                    <p className="mt-0.5 whitespace-nowrap text-[13px] text-slate-500">
+                      {l.id} · <b className="font-semibold text-slate-700">{formatINR(l.dailyWage)}</b>{t('common.perDay')}
                     </p>
                   </div>
-                  <div className="shrink-0 text-right">
-                    <p className="whitespace-nowrap text-[15px] font-bold text-slate-900">
-                      {formatINR(l.dailyWage)}
-                      <span className="text-xs font-normal text-slate-500">{t('common.perDay')}</span>
-                    </p>
-                    {l.status === 'inactive' && <StatusBadge status={l.status} />}
-                  </div>
-                  <ChevronRight className="size-5 shrink-0 text-slate-300" />
+                  <StatusBadge status={l.status} />
+                  <ChevronRight className="size-5 shrink-0 text-slate-400" />
                 </button>
               </li>
             ))}
           </ul>
         )}
-      </Card>
+      </div>
 
       <LabourForm open={formOpen} onClose={() => setFormOpen(false)} />
     </div>

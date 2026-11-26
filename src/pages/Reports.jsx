@@ -157,9 +157,9 @@ export default function Reports() {
           </Field>
         </Card>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <Button size="lg" icon={Download} onClick={downloadPdf} className="col-span-2 h-16 text-lg sm:col-span-1 sm:h-auto">{t('rep.pdf')}</Button>
           <Button size="tile" variant="secondary" icon={Printer} onClick={() => window.print()}>{t('rep.print')}</Button>
-          <Button size="tile" icon={Download} onClick={downloadPdf}>{t('rep.pdf')}</Button>
-          <Button size="tile" variant="dark" icon={ReceiptText} onClick={downloadSlip} disabled={loading} className="col-span-2 sm:col-span-1">{t('rep.slip')}</Button>
+          <Button size="tile" variant="greenOutline" icon={ReceiptText} onClick={downloadSlip} disabled={loading}>{t('rep.slip')}</Button>
         </div>
         <p className="mb-5 mt-2 text-xs text-slate-500">{t('rep.pdfNote')}</p>
       </div>
@@ -179,14 +179,15 @@ export default function Reports() {
         <>
         <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4">
           <Count label={t('rep.present')} value={tt.full} cls="bg-green-50 text-green-700" />
-          <Count label={t('rep.half')} value={tt.half} cls="bg-yellow-50 text-yellow-800" />
+          <Count label={t('rep.half')} value={tt.half} cls="bg-orange-50 text-orange-600" />
           <Count label={t('rep.hourly')} value={tt.hourly} cls="bg-blue-50 text-blue-700" />
           <Count label={t('rep.absent')} value={tt.absent} cls="bg-red-50 text-red-600" />
         </div>
         {tt.extraHours > 0 && (
-          <p className="rounded-xl bg-white px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-200">
-            {t('rep.extra')}: <b className="text-slate-900">{t('common.hrs', { n: tt.extraHours })}</b>
-          </p>
+          <div className="rounded-2xl bg-green-50 px-4 py-3.5 text-center ring-1 ring-green-100">
+            <p className="text-[15px] font-medium text-slate-700">{t('rep.extra')}</p>
+            <p className="text-2xl font-extrabold text-green-800">{t('common.hrs', { n: tt.extraHours })}</p>
+          </div>
         )}
         <Card className="divide-y divide-slate-100">
           <Line label={t('rep.prev')} value={formatINR(tt.opening)} />
@@ -276,9 +277,9 @@ export default function Reports() {
 
 function Count({ label, value, cls }) {
   return (
-    <div className={`rounded-xl px-1 py-3 ${cls}`}>
-      <p className="text-2xl font-bold">{value}</p>
-      <p className="text-xs font-semibold">{label}</p>
+    <div className={`rounded-2xl px-1 py-4 ${cls}`}>
+      <p className="text-3xl font-extrabold">{value}</p>
+      <p className="text-[13px] font-semibold">{label}</p>
     </div>
   )
 }

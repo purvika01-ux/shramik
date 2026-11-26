@@ -1,5 +1,5 @@
-import { CalendarCheck, Check, FileText, IndianRupee, Languages, LogIn, ReceiptText, ShieldCheck, UserPlus, Users, UserCheck, HandCoins, Wallet } from 'lucide-react'
-import { Brand } from '../components/Sidebar'
+import { ArrowRight, CalendarCheck, FileText, IndianRupee, Languages, LogIn, ReceiptText, ShieldCheck, UserPlus, Users } from 'lucide-react'
+import { WorkerLogo, WorkersScene } from '../components/Illustrations'
 import { LanguageSwitch } from '../components/Header'
 import { Button } from '../components/ui'
 import { useLang } from '../i18n/LanguageContext'
@@ -21,50 +21,71 @@ export default function LandingPage({ goTo }) {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* ---------- Top bar ---------- */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 md:px-8">
-          <div className="min-w-0 flex-1">
-            <Brand />
-          </div>
-          <div className="hidden sm:block">
-            <LanguageSwitch compact />
-          </div>
-          <Button variant="secondary" size="sm" icon={LogIn} onClick={login}>{t('auth.login')}</Button>
-          {/* on phones the big "Get started" button below is enough */}
-          <div className="hidden sm:block">
-            <Button size="sm" onClick={register}>{t('auth.register')}</Button>
-          </div>
-        </div>
-      </header>
+      {/* ---------- First screen: on phones this is the whole landing page (welcome screen) ---------- */}
+      <section className="relative overflow-hidden bg-white lg:bg-gradient-to-b lg:from-white lg:to-green-50">
+        {/* soft green shapes in the corners */}
+        <div className="pointer-events-none absolute -right-16 top-40 size-48 rounded-full bg-green-100/70 blur-2xl lg:hidden" aria-hidden="true" />
+        <div className="pointer-events-none absolute -left-20 top-[52%] size-40 rounded-full bg-green-50 blur-2xl lg:hidden" aria-hidden="true" />
 
-      {/* ---------- Hero ---------- */}
-      <section className="bg-gradient-to-b from-green-50 to-white">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 md:px-8 md:py-20 lg:grid-cols-2">
-          <div>
-            <div className="mb-4 sm:hidden">
+        <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col pt-8 md:px-8 lg:grid lg:min-h-0 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-16">
+          <div className="flex flex-col px-6 md:px-0">
+            {/* language + login only on big screens (phones: exactly like the app welcome screen) */}
+            <div className="mb-6 hidden items-center gap-2 lg:flex">
               <LanguageSwitch compact />
+              <button type="button" onClick={login} className="inline-flex h-10 items-center gap-1.5 rounded-xl px-3 text-sm font-bold text-green-700 hover:bg-green-50">
+                <LogIn className="size-4" /> {t('auth.login')}
+              </button>
             </div>
-            <span className="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">{t('land.badge')}</span>
-            <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-5xl">{t('land.title')}</h1>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-600 md:text-lg">{t('land.subtitle')}</p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" icon={UserPlus} onClick={register}>{t('land.cta')}</Button>
-              <Button size="lg" variant="secondary" icon={LogIn} onClick={login}>{t('land.haveAccount')}</Button>
+
+            <div className="flex items-center gap-3">
+              <WorkerLogo className="size-[60px] shrink-0" />
+              <div className="min-w-0 leading-tight">
+                <p className="text-[28px] font-extrabold tracking-tight text-green-700">{t('app.name')}</p>
+                <p className="text-[15px] font-medium text-slate-700">{t('app.subtitle')}</p>
+              </div>
             </div>
-            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-600">
-              {['land.point1', 'land.point2', 'land.point3'].map((k) => (
-                <li key={k} className="flex items-center gap-1.5">
-                  <Check className="size-4 text-green-600" strokeWidth={3} /> {t(k)}
-                </li>
-              ))}
-            </ul>
+
+            <h1 className="mt-10 text-[32px] font-extrabold leading-[1.15] tracking-tight text-slate-900 md:text-5xl">
+              {t('land.heroA')}
+              <br />
+              <span className="text-green-600">{t('land.heroB')}</span>
+              <br />
+              {t('land.heroC')}
+            </h1>
+            <p className="mt-4 max-w-md text-[17px] leading-relaxed text-slate-600">{t('land.heroText')}</p>
+
+            <div className="mt-8 hidden max-w-sm flex-col gap-3 lg:flex">
+              <Button size="lg" className="w-full" onClick={register}>
+                {t('land.getStarted')} <ArrowRight className="size-5" />
+              </Button>
+              <Button size="lg" variant="ghost" className="w-full" onClick={login}>{t('auth.login')}</Button>
+            </div>
           </div>
 
-          <AppPreview />
+          {/* Picture fills the width on phones */}
+          <div className="mt-4 flex flex-1 items-end bg-gradient-to-b from-transparent to-green-50/60 lg:mt-0 lg:bg-none">
+            <WorkersScene className="w-full" />
+          </div>
+
+          {/* White rounded panel at the bottom: dots, Get Started, Login */}
+          <div className="relative z-10 -mt-6 rounded-t-[32px] bg-white px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 lg:hidden">
+            <div className="mb-5 flex justify-center gap-1.5" aria-hidden="true">
+              <span className="h-1.5 w-7 rounded-full bg-green-600" />
+              <span className="size-1.5 rounded-full bg-slate-300" />
+              <span className="size-1.5 rounded-full bg-slate-300" />
+            </div>
+            <div className="mx-auto flex max-w-sm flex-col gap-1.5">
+              <Button size="lg" className="w-full" onClick={register}>
+                {t('land.getStarted')} <ArrowRight className="size-5" />
+              </Button>
+              <Button size="lg" variant="ghost" className="w-full text-slate-800" onClick={login}>{t('auth.login')}</Button>
+            </div>
+          </div>
         </div>
       </section>
 
+      {/* Everything below is for big screens only; on phones the welcome screen above is the whole page */}
+      <div className="hidden lg:block">
       {/* ---------- Features ---------- */}
       <section className="mx-auto max-w-6xl px-4 py-14 md:px-8 md:py-20">
         <h2 className="text-center text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">{t('land.featuresTitle')}</h2>
@@ -115,46 +136,6 @@ export default function LandingPage({ goTo }) {
           © {new Date().getFullYear()} {t('app.name')} – {t('app.subtitle')}
         </p>
       </footer>
-    </div>
-  )
-}
-
-/** A small picture of the app's home screen, built with the same styles (sample numbers) */
-function AppPreview() {
-  const { t } = useLang()
-  const tiles = [
-    { label: t('dash.totalLabour'), value: '28', icon: Users, tone: 'bg-slate-100 text-slate-700' },
-    { label: t('dash.presentToday'), value: '24', icon: UserCheck, tone: 'bg-green-50 text-green-700' },
-    { label: t('dash.wagesToday'), value: '₹18,450', icon: HandCoins, tone: 'bg-amber-50 text-amber-700' },
-    { label: t('dash.pending'), value: '₹4,12,300', icon: Wallet, tone: 'bg-slate-900 text-white' },
-  ]
-  const rows = [
-    { name: 'Ramesh Kumar', status: t('type.full'), extra: '+2 hrs', cls: 'bg-green-50 text-green-700' },
-    { name: 'Suresh Yadav', status: t('type.half'), cls: 'bg-yellow-50 text-yellow-800' },
-    { name: 'Gurpreet Singh', status: t('att.absent'), cls: 'bg-red-50 text-red-600' },
-  ]
-  return (
-    <div className="rounded-3xl border border-slate-200 bg-slate-100 p-3 shadow-xl shadow-slate-200 md:p-4" aria-hidden="true">
-      <div className="grid grid-cols-2 gap-3">
-        {tiles.map(({ label, value, icon: Icon, tone }) => (
-          <div key={label} className="rounded-2xl border border-slate-200 bg-white p-3.5">
-            <span className={`mb-2 grid size-8 place-items-center rounded-lg ${tone}`}>
-              <Icon className="size-4" strokeWidth={2.25} />
-            </span>
-            <p className="truncate text-xs font-medium text-slate-500">{label}</p>
-            <p className="text-lg font-bold tracking-tight text-slate-900">{value}</p>
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white">
-        {rows.map((r) => (
-          <div key={r.name} className="flex items-center justify-between gap-2 px-3.5 py-2.5">
-            <span className="truncate text-sm font-semibold text-slate-800">{r.name}</span>
-            <span className={`shrink-0 rounded-md px-2 py-0.5 text-xs font-bold ${r.cls}`}>
-              {r.status} {r.extra}
-            </span>
-          </div>
-        ))}
       </div>
     </div>
   )

@@ -74,7 +74,7 @@ export default function LabourProfile({ labourId, navigate }) {
 
   return (
     <div className="space-y-4">
-      <button type="button" onClick={() => navigate('/labour')} className="inline-flex h-11 items-center gap-2 pr-3 text-[15px] font-semibold text-slate-600">
+      <button type="button" onClick={() => navigate('/labour')} className="hidden h-11 md:inline-flex items-center gap-2 pr-3 text-[15px] font-semibold text-slate-600">
         <ArrowLeft className="size-5" /> {t('prof.back')}
       </button>
 

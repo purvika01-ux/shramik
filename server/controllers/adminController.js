@@ -4,7 +4,7 @@ const Labourer = require('../models/Labourer')
 
 // GET /api/admin/contractors – every registered contractor with how many labourers they have
 async function getContractors(req, res) {
-  const contractors = await User.find({ role: 'contractor' }).select('-password').sort({ createdAt: -1 }).lean()
+  const contractors = await User.find({ role: 'contractor' }).select('-password -resetTokenHash -resetTokenExpires').sort({ createdAt: -1 }).lean()
 
   // Count labourers per contractor in one query
   const counts = await Labourer.aggregate([{ $group: { _id: '$contractor', count: { $sum: 1 } } }])
@@ -15,6 +15,7 @@ async function getContractors(req, res) {
       id: c._id,
       name: c.name,
       email: c.email,
+      mobile: c.mobile || '',
       isActive: c.isActive,
       createdAt: c.createdAt,
       labourers: countById[String(c._id)] || 0,

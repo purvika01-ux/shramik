@@ -44,14 +44,24 @@ function Totals({ wages, advances, payments, pending }) {
   const { t } = useLang()
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      <Box label={t('his.wages')} value={formatINR(wages)} />
-      <Box label={t('his.advances')} value={formatINR(advances)} tone="text-amber-700" />
-      <Box label={t('his.payments')} value={formatINR(payments)} />
-      <div className="rounded-2xl bg-slate-900 p-4 text-white">
-        <p className="text-sm text-slate-300">{t('his.pending')}</p>
-        <p className={`money-fit mt-1 font-bold ${pending < 0 ? 'text-red-300' : ''}`}>
+      {/* Total wages */}
+      <div className="col-span-2 flex items-center justify-center gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm shadow-slate-200/70 lg:col-span-1">
+        <span className="grid size-14 shrink-0 place-items-center rounded-full bg-green-600 text-white">
+          <IndianRupee className="size-7" strokeWidth={2.5} />
+        </span>
+        <div className="min-w-0">
+          <p className="truncate text-[28px] font-extrabold leading-tight tracking-tight text-slate-900">{formatINR(wages)}</p>
+          <p className="text-[15px] font-medium text-slate-600">{t('his.wages')}</p>
+        </div>
+      </div>
+      <Box label={t('his.advances')} value={formatINR(advances)} icon={HandCoins} cls="bg-orange-50 ring-orange-100" iconCls="bg-orange-500" />
+      <Box label={t('his.payments')} value={formatINR(payments)} icon={Banknote} cls="bg-green-50 ring-green-100" iconCls="bg-green-600" />
+      {/* What is still to be paid */}
+      <div className={`col-span-2 rounded-2xl p-4 text-center ring-1 lg:col-span-1 ${pending < 0 ? 'bg-red-50 ring-red-100' : 'bg-green-100/70 ring-green-200'}`}>
+        <p className={`text-[28px] font-extrabold leading-tight tracking-tight ${pending < 0 ? 'text-red-600' : 'text-slate-900'}`}>
           {pending < 0 ? t('money.extra', { amt: formatINR(-pending) }) : formatINR(pending)}
         </p>
+        <p className="text-[15px] font-medium text-slate-700">{t('his.pending')}</p>
       </div>
     </div>
   )
@@ -153,7 +163,7 @@ function Ledger({ labourId, navigate, open }) {
 
   return (
     <div className="space-y-4">
-      <button type="button" onClick={() => navigate('/hisab')} className="inline-flex h-11 items-center gap-2 pr-3 text-[15px] font-semibold text-slate-600">
+      <button type="button" onClick={() => navigate('/hisab')} className="hidden h-11 md:inline-flex items-center gap-2 pr-3 text-[15px] font-semibold text-slate-600">
         <ArrowLeft className="size-5" /> {t('his.back')}
       </button>
 
@@ -219,11 +229,14 @@ function Ledger({ labourId, navigate, open }) {
   )
 }
 
-function Box({ label, value, tone = 'text-slate-900' }) {
+function Box({ label, value, icon: Icon, cls, iconCls }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4">
-      <p className="text-sm text-slate-500">{label}</p>
-      <p className={`money-fit mt-1 font-bold ${tone}`}>{value}</p>
+    <div className={`flex flex-col items-center rounded-2xl p-4 text-center ring-1 ${cls}`}>
+      <span className={`grid size-9 place-items-center rounded-lg text-white ${iconCls}`}>
+        <Icon className="size-5" />
+      </span>
+      <p className="money-fit mt-2 font-extrabold text-slate-900">{value}</p>
+      <p className="text-sm font-medium text-slate-600">{label}</p>
     </div>
   )
 }

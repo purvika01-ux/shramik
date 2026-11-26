@@ -1,10 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Same as the app logo: green rounded square with a white hard hat -->
-  <rect width="64" height="64" rx="16" fill="#16a34a"/>
-  <g transform="translate(13 13) scale(1.5833)" fill="none" stroke="#ffffff" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/>
-    <path d="M14 6a6 6 0 0 1 6 6v3"/>
-    <path d="M4 15v-3a6 6 0 0 1 6-6"/>
-    <rect x="2" y="15" width="20" height="4" rx="1"/>
-  </g>
+  <!-- Same as the app logo: worker with a yellow hard hat -->
+  <path d="M8 63c0-13 11-20 24-20s24 7 24 20z" fill="#15803d"/>
+  <path d="M25 43.5 32 53l7-9.5" fill="#fff"/>
+  <path d="M28.5 45h7l-3.5 5z" fill="#16a34a"/>
+  <circle cx="32" cy="29" r="11.5" fill="#16a34a"/>
+  <rect x="23.5" y="31" width="17" height="7.5" rx="3.75" fill="#fff"/>
+  <path d="M17.5 25c0-11 6.5-15.5 14.5-15.5S46.5 14 46.5 25z" fill="#facc15"/>
+  <rect x="14.5" y="23" width="35" height="5" rx="2.5" fill="#eab308"/>
+  <rect x="29.5" y="9.5" width="5" height="12" rx="2" fill="#fde047"/>
 </svg>

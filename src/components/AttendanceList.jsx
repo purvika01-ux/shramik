@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { Minus, Plus } from 'lucide-react'
 import { formatINR } from '../utils/currency'
 import { hourlyRate, recordWage } from '../utils/calculations'
+import { Avatar } from './ui'
 
 /** − [ 3 ] +  : big touch-friendly number picker (steps of 1, half hours can be typed) */
 export function Stepper({ value, onChange, min = 0, max = 24, label, t }) {
@@ -57,7 +58,7 @@ const Row = memo(function Row({ labour, index, entry, wage, hpd, onChange, t }) 
   return (
     <li className="px-4 py-4">
       <div className="flex items-start gap-3">
-        <span className="mt-0.5 w-6 shrink-0 text-right text-sm font-semibold text-slate-400">{index + 1}</span>
+        <Avatar name={labour.name} className={`size-10 text-xs ${status === 'A' ? 'bg-red-50 text-red-700' : isPresent ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-600'}`} />
         <div className="min-w-0 flex-1">
           <p className="truncate text-[16px] font-bold text-slate-900">{labour.name}</p>
           <p className="mt-0.5 text-[13px] text-slate-500">
@@ -73,7 +74,7 @@ const Row = memo(function Row({ labour, index, entry, wage, hpd, onChange, t }) 
       </div>
 
       {/* Present / Absent */}
-      <div className="mt-3 grid grid-cols-2 gap-2 sm:pl-9" role="radiogroup" aria-label={labour.name}>
+      <div className="mt-3 grid grid-cols-2 gap-2 sm:pl-[52px]" role="radiogroup" aria-label={labour.name}>
         <button
           type="button"
           role="radio"
@@ -96,7 +97,7 @@ const Row = memo(function Row({ labour, index, entry, wage, hpd, onChange, t }) 
 
       {/* Present → Full Day / Half Day / By Hours */}
       {isPresent && (
-        <div className="mt-3 rounded-2xl bg-slate-50 p-3 sm:ml-9">
+        <div className="mt-3 rounded-2xl bg-slate-50 p-3 sm:ml-[52px]">
           <div className="grid grid-cols-3 gap-2" role="radiogroup">
             {TYPES.map((o) => {
               const on = status === o.value

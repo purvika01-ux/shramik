@@ -103,7 +103,10 @@ export default function AdminDashboard() {
                       <span className="truncate">{c.name}</span>
                       <StatusBadge status={c.isActive ? 'active' : 'inactive'} />
                     </p>
-                    <p className="truncate text-sm text-slate-500">{c.email}</p>
+                    <p className="truncate text-sm text-slate-500">
+                      {c.email}
+                      {c.mobile && ` · +91 ${c.mobile}`}
+                    </p>
                     <p className="text-xs text-slate-500">
                       {t('admin.labourers', { n: c.labourers })} · {t('admin.joined', { date: formatDate(new Date(c.createdAt).toLocaleDateString('en-CA')) })}
                     </p>

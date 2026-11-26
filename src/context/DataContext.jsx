@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { WorkerLogo } from '../components/Illustrations'
 import { Loader2, RefreshCw } from 'lucide-react'
 import api, { errorMessage } from '../api/axios'
 import { emptyData } from '../utils/backup'
@@ -167,7 +168,8 @@ export function DataProvider({ children }) {
 
 export function FullPageLoader() {
   return (
-    <div className="grid min-h-screen place-items-center text-slate-500">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 text-slate-500">
+      <WorkerLogo className="size-16" />
       <Loader2 className="size-8 animate-spin text-green-600" aria-label="Loading" />
     </div>
   )

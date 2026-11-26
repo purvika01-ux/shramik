@@ -8,25 +8,27 @@ import { describeEntry } from '../utils/calculations'
 const BTN_BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold leading-tight transition-colors active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none select-none'
 const BTN_VARIANTS = {
-  primary: 'bg-green-600 text-white hover:bg-green-700',
+  primary: 'bg-green-600 text-white shadow-sm shadow-green-700/20 hover:bg-green-700',
   warning: 'bg-amber-500 text-white hover:bg-amber-600',
   dark: 'bg-slate-900 text-white hover:bg-slate-800',
   secondary: 'bg-white text-slate-800 border border-slate-300 hover:bg-slate-50',
   danger: 'bg-red-600 text-white hover:bg-red-700',
   dangerOutline: 'bg-white text-red-600 border border-red-200 hover:bg-red-50',
   ghost: 'text-slate-600 hover:bg-slate-100',
+  outline: 'bg-white text-slate-800 border-2 border-slate-700 hover:bg-slate-50',
+  greenOutline: 'bg-white text-green-700 border-2 border-green-600 hover:bg-green-50',
 }
 const BTN_SIZES = {
-  sm: 'h-9 px-3 text-sm',
-  md: 'h-11 px-4 text-[15px]',
-  lg: 'h-14 px-5 text-base',
+  sm: 'h-10 px-3.5 text-sm',
+  md: 'h-12 px-4 text-[15px]',
+  lg: 'h-14 px-5 text-[17px]',
 }
 
 export function Button({ variant = 'primary', size = 'md', className = '', icon: Icon, children, ...props }) {
   if (size === 'tile') {
     // Big square-ish action: icon on top, label below (never squeezes text onto 2 lines)
     return (
-      <button type="button" className={`${BTN_BASE} ${BTN_VARIANTS[variant]} min-h-[72px] flex-col gap-1.5 px-2 py-3 text-[15px] ${className}`} {...props}>
+      <button type="button" className={`${BTN_BASE} ${BTN_VARIANTS[variant]} min-h-[80px] flex-col gap-1.5 rounded-2xl px-2 py-3 text-[15px] ${className}`} {...props}>
         {Icon && <Icon className="size-6" strokeWidth={2.25} />}
         <span className="max-w-full truncate">{children}</span>
       </button>
@@ -42,7 +44,7 @@ export function Button({ variant = 'primary', size = 'md', className = '', icon:
 
 export function Card({ className = '', children, ...props }) {
   return (
-    <div className={`rounded-2xl border border-slate-200 bg-white ${className}`} {...props}>
+    <div className={`rounded-2xl border border-slate-100 bg-white shadow-sm shadow-slate-200/70 ${className}`} {...props}>
       {children}
     </div>
   )
@@ -52,8 +54,9 @@ export function PageHeader({ title, subtitle, actions }) {
   return (
     <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-[28px]">{title}</h1>
-        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+        {/* On phones the top bar already shows the page name */}
+        <h1 className="hidden text-2xl font-bold tracking-tight text-slate-900 md:block md:text-[28px]">{title}</h1>
+        {subtitle && <p className="text-[15px] text-slate-500 md:mt-1 md:text-sm">{subtitle}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </div>
@@ -77,10 +80,18 @@ export function Field({ label, error, hint, children, required }) {
 }
 
 const INPUT =
-  'w-full h-12 rounded-xl border bg-white px-3.5 text-base text-slate-900 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-green-500/30'
+  'w-full h-[52px] rounded-xl border bg-white px-3.5 text-base text-slate-900 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-green-500/30'
 
-export function Input({ error, className = '', ...props }) {
-  return <input className={`${INPUT} ${error ? 'border-red-400' : 'border-slate-300 focus:border-green-600'} ${className}`} {...props} />
+/** icon: optional lucide icon shown inside the box on the left */
+export function Input({ error, className = '', icon: Icon, ...props }) {
+  const input = <input className={`${INPUT} ${error ? 'border-red-400' : 'border-slate-300 focus:border-green-600'} ${Icon ? 'pl-12' : ''} ${className}`} {...props} />
+  if (!Icon) return input
+  return (
+    <div className="relative">
+      <Icon className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-slate-500" />
+      {input}
+    </div>
+  )
 }
 
 /** Password box with an eye button to show / hide what was typed */
@@ -155,14 +166,14 @@ export function Badge({ color = 'slate', children, className = '' }) {
 
 export function StatusBadge({ status }) {
   const { t } = useLang()
-  return status === 'active' ? <Badge color="green">{t('common.active')}</Badge> : <Badge color="slate">{t('common.inactive')}</Badge>
+  return status === 'active' ? <Badge color="green">{t('common.active')}</Badge> : <Badge color="red">{t('common.inactive')}</Badge>
 }
 
 export function EmptyState({ icon: Icon, title, message, action }) {
   return (
     <div className="flex flex-col items-center px-6 py-12 text-center">
       {Icon && (
-        <div className="mb-3 grid size-14 place-items-center rounded-2xl bg-slate-100 text-slate-400">
+        <div className="mb-3 grid size-14 place-items-center rounded-2xl bg-green-50 text-green-600">
           <Icon className="size-7" />
         </div>
       )}
@@ -207,7 +218,8 @@ export function Avatar({ name, className = '' }) {
     .map((p) => p[0].toUpperCase())
     .join('')
   return (
-    <div className={`grid size-10 shrink-0 place-items-center rounded-full bg-slate-100 text-sm font-bold text-slate-600 ${className}`}>
+    // Default colours unless the caller passes its own bg-/text- colour
+    <div className={`grid size-11 shrink-0 place-items-center rounded-full text-sm font-bold ${/bg-/.test(className) ? '' : 'bg-green-50 text-green-800'} ${className}`}>
       {initials}
     </div>
   )
