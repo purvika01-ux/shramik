@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "create-admin": "node scripts/createAdmin.js"
+    "create-admin": "node scripts/createAdmin.js",
+    "seed-contractors": "node scripts/seedContractors.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

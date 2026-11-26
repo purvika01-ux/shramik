@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
-import { KeyRound, Loader2, LogOut, Users } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Briefcase, HardHat, KeyRound, Loader2, LogOut, UserCheck, UserX, Users } from 'lucide-react'
+import DashboardCard from '../components/DashboardCard'
 import ChangePasswordForm from '../components/ChangePasswordForm'
 import { Brand } from '../components/Sidebar'
 import { LanguageSwitch } from '../components/Header'
@@ -21,6 +22,17 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [passwordOpen, setPasswordOpen] = useState(false)
+
+  // Totals for the stat cards – worked out from the contractor list already loaded
+  const stats = useMemo(() => {
+    const active = contractors.filter((c) => c.isActive).length
+    return {
+      contractors: contractors.length,
+      labourers: contractors.reduce((sum, c) => sum + (c.labourers || 0), 0),
+      active,
+      inactive: contractors.length - active,
+    }
+  }, [contractors])
 
   useEffect(() => {
     api
@@ -65,6 +77,15 @@ export default function AdminDashboard() {
 
       <main className="mx-auto max-w-5xl px-4 py-6 md:px-8">
         <PageHeader title={t('admin.title')} subtitle={t('admin.subtitle', { name: user.name })} />
+
+        {!loading && !error && (
+          <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <DashboardCard label={t('admin.statContractors')} value={stats.contractors} icon={Briefcase} tone="navy" />
+            <DashboardCard label={t('admin.statLabourers')} value={stats.labourers} icon={HardHat} tone="amber" />
+            <DashboardCard label={t('admin.statActive')} value={stats.active} icon={UserCheck} tone="green" />
+            <DashboardCard label={t('admin.statInactive')} value={stats.inactive} icon={UserX} tone="red" />
+          </div>
+        )}
 
         <Card>
           {loading ? (

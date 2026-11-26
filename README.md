@@ -11,6 +11,7 @@ A MERN stack web app for contractors to manage labourers, daily attendance, wage
   - Manage their own labourers, attendance, advances and payments.
   - View monthly reports and download them as PDF.
 - **Admin:**
+  - See totals: contractors, labourers, active and inactive accounts.
   - View all registered contractors.
   - Activate or deactivate their accounts.
 - Each contractor can only see their own data. This is checked on the server.
@@ -62,6 +63,12 @@ Open `server\.env` and set your own `JWT_SECRET` and `ADMIN_PASSWORD`. Then crea
 
 ```powershell
 npm --prefix server run create-admin
+```
+
+Optional: add demo contractors (up to 12 in total) so the admin page has data. They log in with `SEED_PASSWORD` from `server\.env` (default `demo123`):
+
+```powershell
+npm --prefix server run seed-contractors
 ```
 
 **3. Start the backend and frontend** (in two terminals)

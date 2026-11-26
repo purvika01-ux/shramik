@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Users, UserCheck, HandCoins, Wallet, CalendarCheck, IndianRupee, CheckCircle2 } from 'lucide-react'
 import DashboardCard from '../components/DashboardCard'
+import DashboardChart from '../components/DashboardChart'
 import { useData } from '../context/DataContext'
 import { useLang } from '../i18n/LanguageContext'
 import { dayStats, totalPending } from '../utils/calculations'
@@ -56,6 +57,8 @@ export default function Dashboard({ navigate }) {
           <span className="text-lg font-bold leading-snug tracking-wide">{t('dash.viewHisab')}</span>
         </button>
       </div>
+
+      <DashboardChart data={data} />
     </div>
   )
 }
