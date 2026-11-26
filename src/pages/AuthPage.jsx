@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LogIn, UserPlus } from 'lucide-react'
+import { ArrowLeft, LogIn, UserPlus } from 'lucide-react'
 import { Brand } from '../components/Sidebar'
 import { LanguageSwitch } from '../components/Header'
 import { Button, Card, Field, Input, PasswordInput } from '../components/ui'
@@ -7,11 +7,13 @@ import { useAuth } from '../context/AuthContext'
 import { useLang } from '../i18n/LanguageContext'
 import { errorMessage } from '../api/axios'
 
-/** Login and Register on one page (contractors can register; admin only logs in) */
-export default function AuthPage() {
+/**
+ * Login and Register on one page (contractors can register; admin only logs in)
+ * mode: 'login' | 'register'   goTo: switches between 'home', 'login' and 'register'
+ */
+export default function AuthPage({ mode, goTo }) {
   const { login, register } = useAuth()
   const { t } = useLang()
-  const [mode, setMode] = useState('login') // 'login' | 'register'
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -20,7 +22,7 @@ export default function AuthPage() {
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
 
   const switchMode = () => {
-    setMode(isRegister ? 'login' : 'register')
+    goTo(isRegister ? 'login' : 'register')
     setError('')
   }
 
@@ -44,6 +46,9 @@ export default function AuthPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm">
+        <button type="button" onClick={() => goTo('home')} className="mb-4 inline-flex h-10 items-center gap-2 pr-3 text-sm font-semibold text-slate-600 hover:text-slate-900">
+          <ArrowLeft className="size-4" /> {t('land.backHome')}
+        </button>
         <div className="mb-6 flex items-center justify-between gap-3">
           <Brand />
           <LanguageSwitch compact />

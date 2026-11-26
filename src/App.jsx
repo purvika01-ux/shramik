@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DataProvider, FullPageLoader } from './context/DataContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { LanguageProvider } from './i18n/LanguageContext'
@@ -14,6 +14,7 @@ import Attendance from './pages/Attendance'
 import HisabKitab from './pages/HisabKitab'
 import Reports from './pages/Reports'
 import AuthPage from './pages/AuthPage'
+import LandingPage from './pages/LandingPage'
 import AdminDashboard from './pages/AdminDashboard'
 import { useHashRoute } from './hooks/useHashRoute'
 
@@ -40,16 +41,38 @@ function Shell() {
   )
 }
 
+/** Pages for visitors who are not logged in: #/ (landing), #/login, #/register */
+function PublicPages() {
+  const read = () => (['#/login', '#/register'].includes(window.location.hash) ? window.location.hash.slice(2) : 'home')
+  const [page, setPage] = useState(read)
+
+  useEffect(() => {
+    const onChange = () => {
+      setPage(read())
+      window.scrollTo(0, 0)
+    }
+    window.addEventListener('hashchange', onChange)
+    return () => window.removeEventListener('hashchange', onChange)
+  }, [])
+
+  const goTo = (next) => {
+    window.location.hash = next === 'home' ? '#/' : `#/${next}`
+  }
+
+  if (page === 'home') return <LandingPage goTo={goTo} />
+  return <AuthPage key={page} mode={page} goTo={goTo} />
+}
+
 /**
  * Protected routes by role:
- *   not logged in -> Login / Register
+ *   not logged in -> Landing page, Login / Register
  *   admin         -> Admin dashboard (contractor list)
  *   contractor    -> the labour register (their own data only)
  */
 function RoleRouter() {
   const { user, checking } = useAuth()
   if (checking) return <FullPageLoader />
-  if (!user) return <AuthPage />
+  if (!user) return <PublicPages />
   if (user.role === 'admin') return <AdminDashboard />
   return (
     // key: a different contractor logging in gets a freshly loaded register

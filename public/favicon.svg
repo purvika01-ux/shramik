@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0f172a"/><text x="32" y="45" font-family="Arial, sans-serif" font-size="36" font-weight="700" fill="#22c55e" text-anchor="middle">C</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Same as the app logo: green rounded square with a white hard hat -->
+  <rect width="64" height="64" rx="16" fill="#16a34a"/>
+  <g transform="translate(13 13) scale(1.5833)" fill="none" stroke="#ffffff" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/>
+    <path d="M14 6a6 6 0 0 1 6 6v3"/>
+    <path d="M4 15v-3a6 6 0 0 1 6-6"/>
+    <rect x="2" y="15" width="20" height="4" rx="1"/>
+  </g>
+</svg>
