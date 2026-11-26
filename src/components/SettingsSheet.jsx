@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { RotateCcw, Eraser, Download, Upload, LogOut } from 'lucide-react'
+import { RotateCcw, Eraser, Download, Upload, LogOut, KeyRound } from 'lucide-react'
+import ChangePasswordForm from './ChangePasswordForm'
 import { useAuth } from '../context/AuthContext'
 import Modal from './Modal'
 import { Button } from './ui'
@@ -22,6 +23,7 @@ export default function SettingsSheet({ open, onClose }) {
   const toast = useToast()
   const [hours, setHours] = useState(data.settings.hoursPerDay)
   const fileRef = useRef(null)
+  const [passwordOpen, setPasswordOpen] = useState(false)
   const [lastBackup, setLastBackup] = useState(() => {
     try {
       return localStorage.getItem(LAST_BACKUP_KEY)
@@ -109,12 +111,18 @@ export default function SettingsSheet({ open, onClose }) {
   return (
     <Modal open={open} onClose={onClose} title={t('set.title')}>
       <div className="space-y-7">
-        <section className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 p-4">
-          <div className="min-w-0">
-            <p className="truncate font-semibold text-slate-900">{user.name} {t('auth.roleContractor')}</p>
-            <p className="truncate text-xs text-slate-500">{user.email}</p>
+        <section className="rounded-2xl bg-slate-50 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate font-semibold text-slate-900">{user.name} {t('auth.roleContractor')}</p>
+              <p className="truncate text-xs text-slate-500">{user.email}</p>
+            </div>
+            <Button variant="dangerOutline" size="sm" icon={LogOut} onClick={logout}>{t('auth.logout')}</Button>
           </div>
-          <Button variant="dangerOutline" size="sm" icon={LogOut} onClick={logout}>{t('auth.logout')}</Button>
+          <Button variant="secondary" size="sm" icon={KeyRound} className="mt-3 w-full" onClick={() => setPasswordOpen(true)}>
+            {t('pw.title')}
+          </Button>
+          <ChangePasswordForm open={passwordOpen} onClose={() => setPasswordOpen(false)} />
         </section>
 
         <section>

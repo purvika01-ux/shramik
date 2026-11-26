@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Download, Printer, FileText, Loader2 } from 'lucide-react'
+import { Download, Printer, FileText, Loader2, ReceiptText } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
+import { downloadSalarySlip } from '../utils/salarySlip'
 import api, { errorMessage } from '../api/axios'
 import { BalanceText, Button, Card, DayBadge, EmptyState, Field, Input, PageHeader, Select } from '../components/ui'
 import { TypeBadge } from '../components/TransactionList'
@@ -22,6 +24,7 @@ export default function Reports() {
   const { data, labourById } = useData()
   const { t, monthName } = useLang()
   const toast = useToast()
+  const { user } = useAuth()
   const [month, setMonth] = useState(currentMonthKey())
   const [labourId, setLabourId] = useState('all')
   const range = monthRange(month)
@@ -120,6 +123,20 @@ export default function Reports() {
     }
   }
 
+  // One-page salary slip for the selected labourer and month
+  const downloadSlip = async () => {
+    if (!single) return toast.error(t('rep.slipPick'))
+    const row = report?.rows[0]
+    if (!row) return toast.error(t('rep.nothing'))
+    try {
+      const file = await downloadSalarySlip({ labour: single, row, month, contractorName: user.name, hoursPerDay: data.settings.hoursPerDay })
+      toast.success(t('rep.pdfDone', { file }))
+    } catch (err) {
+      console.error(err)
+      toast.error(t('rep.pdfFail'))
+    }
+  }
+
   const tt = report?.totals
 
   return (
@@ -139,9 +156,10 @@ export default function Reports() {
             </Select>
           </Field>
         </Card>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <Button size="tile" variant="secondary" icon={Printer} onClick={() => window.print()}>{t('rep.print')}</Button>
           <Button size="tile" icon={Download} onClick={downloadPdf}>{t('rep.pdf')}</Button>
+          <Button size="tile" variant="dark" icon={ReceiptText} onClick={downloadSlip} disabled={loading} className="col-span-2 sm:col-span-1">{t('rep.slip')}</Button>
         </div>
         <p className="mb-5 mt-2 text-xs text-slate-500">{t('rep.pdfNote')}</p>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Loader2, LogOut, Users } from 'lucide-react'
+import { KeyRound, Loader2, LogOut, Users } from 'lucide-react'
+import ChangePasswordForm from '../components/ChangePasswordForm'
 import { Brand } from '../components/Sidebar'
 import { LanguageSwitch } from '../components/Header'
 import { Button, Card, EmptyState, PageHeader, StatusBadge } from '../components/ui'
@@ -19,6 +20,7 @@ export default function AdminDashboard() {
   const [contractors, setContractors] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [passwordOpen, setPasswordOpen] = useState(false)
 
   useEffect(() => {
     api
@@ -54,6 +56,9 @@ export default function AdminDashboard() {
             <Brand compact />
           </div>
           <LanguageSwitch compact />
+          <Button variant="secondary" size="sm" icon={KeyRound} onClick={() => setPasswordOpen(true)} aria-label={t('pw.title')} title={t('pw.title')}>
+            <span className="hidden sm:inline">{t('pw.title')}</span>
+          </Button>
           <Button variant="secondary" size="sm" icon={LogOut} onClick={logout}>{t('auth.logout')}</Button>
         </div>
       </header>
@@ -91,6 +96,7 @@ export default function AdminDashboard() {
           )}
         </Card>
       </main>
+      <ChangePasswordForm open={passwordOpen} onClose={() => setPasswordOpen(false)} />
     </div>
   )
 }

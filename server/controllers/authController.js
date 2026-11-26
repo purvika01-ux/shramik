@@ -48,4 +48,20 @@ async function me(req, res) {
   res.json({ user: publicUser(req.user) })
 }
 
-module.exports = { register, login, me }
+// PUT /api/auth/password  body: { currentPassword, newPassword }  – admin and contractors
+async function changePassword(req, res) {
+  const { currentPassword, newPassword } = req.body
+  if (!currentPassword || !newPassword) return res.status(400).json({ message: 'Enter current and new password' })
+  if (newPassword.length < 6) return res.status(400).json({ message: 'New password must be at least 6 characters' })
+
+  // req.user has no password field, so load it again with the hash
+  const user = await User.findById(req.user._id)
+  if (!(await bcrypt.compare(currentPassword, user.password))) {
+    return res.status(400).json({ message: 'Current password is wrong' })
+  }
+  user.password = await bcrypt.hash(newPassword, 10)
+  await user.save()
+  res.json({ message: 'Password changed' })
+}
+
+module.exports = { register, login, me, changePassword }
