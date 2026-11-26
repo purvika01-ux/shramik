@@ -15,7 +15,9 @@ api.interceptors.request.use((config) => {
 /** Readable error text from a failed request */
 export function errorMessage(err) {
   if (err.response?.data?.message) return err.response.data.message
-  if (err.request && !err.response) return 'Cannot reach the server. Is the backend running?'
+  // No response at all, or (in development) the Vite proxy's bare error when the backend is down
+  const proxyFailed = [500, 502, 503, 504].includes(err.response?.status) && !err.response?.data
+  if ((err.request && !err.response) || proxyFailed) return 'Cannot reach the server. Is the backend running?'
   return 'Something went wrong'
 }
 
